@@ -18,16 +18,15 @@ export const authOptions = {
   },
   callbacks: {
     async signIn({ user, account, profile }) {
-      // Optional: Add custom sign-in logic here
       return true;
     },
-    async redirect({ url, baseUrl }) {
+    async redirect({ baseUrl }) {
       return baseUrl;
     },
-    async session({ session, token, user }) {
+    async session({ session}) {
       return session;
     },
-    async jwt({ token, user, account, profile, isNewUser }) {
+    async jwt({ token}) {
       return token;
     },
   },
