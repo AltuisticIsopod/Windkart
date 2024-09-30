@@ -1,6 +1,6 @@
 'use client';
 
-import { useParams, useRouter, useSearchParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useCart } from '../../context/CartContext';
 
 const products = [
@@ -36,7 +36,7 @@ export default function ProductPage() {
         <h1 className="text-3xl font-bold text-blue-600 mb-4">{product.name}</h1>
         <p className="text-xl text-gray-800 mb-4">${product.price}</p>
         <p className="text-gray-600 mb-6">
-          This is a great product that you can add to your cart. It's a fantastic choice for anyone looking for quality and value.
+          This is a great product that you can add to your cart. It&apos;s a fantastic choice for anyone looking for quality and value.
         </p>
         <button
           onClick={() => addToCart(product)}

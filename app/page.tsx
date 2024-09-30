@@ -10,7 +10,7 @@ export default function HomePage() {
             Welcome to WindKart
           </h1>
           <p className="text-lg text-center text-gray-700 mb-5">
-            Discover a variety of products and window shop to your heart's
+            Discover a variety of products and window shop to your heart&apos;s
             content!
           </p>
         </div>
