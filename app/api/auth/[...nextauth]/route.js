@@ -1,7 +1,6 @@
 import NextAuth from 'next-auth';
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
 import clientPromise from '../../../lib/db';
-import { getServerSession } from 'next-auth';
 import Google from 'next-auth/providers/google';
 
 export const handler = NextAuth({
