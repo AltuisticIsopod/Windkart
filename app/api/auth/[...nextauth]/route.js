@@ -4,7 +4,7 @@ import clientPromise from '../../../lib/db';
 import { getServerSession } from 'next-auth';
 import Google from 'next-auth/providers/google';
 
-export const authOptions = {
+export const handler = NextAuth({
   adapter: MongoDBAdapter(clientPromise),
   providers: [
     Google({
@@ -30,10 +30,10 @@ export const authOptions = {
       return token;
     },
   },
-};
+});
 
-const handler = NextAuth(authOptions)
+// const handler = NextAuth(authOptions)
 
-export const getAuthSession = () => getServerSession(authOptions)
+// export const getAuthSession = () => getServerSession(authOptions)
 
 export { handler as GET, handler as POST }
