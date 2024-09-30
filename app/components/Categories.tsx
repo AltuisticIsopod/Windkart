@@ -1,5 +1,4 @@
 import Link from "next/link";
-import Image from "next/image";
 
 const Categories = () => {
   const categories = [
@@ -53,13 +52,6 @@ const Categories = () => {
                   height={500}
                 />
               </picture>
-              {/* <Image
-                src={category.image}
-                alt={category.name}
-                width={300}
-                height={300}
-                className="w-full h-full object-cover rounded-full border-2 border-gray-200 group-hover:scale-105 transition-transform"
-              /> */}
             </div>
             <span className="text-center text-sm font-medium text-gray-700 group-hover:text-blue-600">
               {category.name}
