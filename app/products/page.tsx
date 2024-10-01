@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 export default function ProductListPage() {
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("null");
+  const [error, setError] = useState(null);
 
   // Fetch product data from FakeStoreAPI when component mounts
   useEffect(() => {
@@ -20,7 +20,7 @@ export default function ProductListPage() {
         setProducts(data);
         setLoading(false);
       } catch (error) {
-        setError("error");
+        setError(error.message);
         setLoading(false);
       }
     };
@@ -50,10 +50,11 @@ export default function ProductListPage() {
         <h1 className="text-4xl font-bold text-blue-600 text-center mb-8">
           Our Products
         </h1>
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product) => (
             <Link key={product.id} href={`/products/${product.id}`}>
               <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer transform hover:scale-105 flex flex-col h-full">
+                {/* Display the product image */}
                 <img
                   src={product.image}
                   alt={product.title}
@@ -71,7 +72,7 @@ export default function ProductListPage() {
               </div>
             </Link>
           ))}
-        </div> */}
+        </div>
       </div>
     </div>
   );
