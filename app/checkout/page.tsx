@@ -1,3 +1,4 @@
+"use client"
 import { useCart } from '../context/CartContext';
 
 export default function CheckoutPage() {
@@ -12,7 +13,7 @@ export default function CheckoutPage() {
     <div>
       <h1>Checkout</h1>
       <h2>Order Summary</h2>
-      {cart.map((item) => (
+      {cart?.map((item) => (
         <div key={item.id}>
           <h3>{item.name}</h3>
           <p>${item.price}</p>
