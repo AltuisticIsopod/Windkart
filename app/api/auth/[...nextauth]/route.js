@@ -1,38 +1,30 @@
-import NextAuth from 'next-auth';
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from '../../../lib/db';
-import Google from 'next-auth/providers/google';
+import clientPromise from "../../../lib/db"; // Adjust path to your MongoDB connection file
 
-export const handler = NextAuth({
-  adapter: MongoDBAdapter(clientPromise),
+// Configuration for NextAuth
+const authOptions = {
   providers: [
-    Google({
+    GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   ],
+  adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt",
+    strategy: "jwt", // Use JWT for sessions
   },
   callbacks: {
-    async signIn() {
-      return true;
-    },
-    async redirect({ baseUrl }) {
-      return baseUrl;
-    },
-    async session({ session}) {
+    async session({ session, token }) {
+      session.user.id = token.sub;
       return session;
     },
-    async jwt({ token}) {
-      return token;
-    },
   },
-});
+};
 
-// const handler = NextAuth(authOptions)
+// Export NextAuth as both POST and GET handler
+const handler = NextAuth(authOptions);
 
-// export const getAuthSession = () => getServerSession(authOptions)
-
-export { handler as GET, handler as POST }
+export { handler as GET, handler as POST };
