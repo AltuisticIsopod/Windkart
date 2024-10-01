@@ -1,5 +1,5 @@
 import Link from "next/link";
-import Categories from "./components/Categories"; // Import the Categories component
+import Categories from "./components/Categories";
 
 export default function HomePage() {
   return (

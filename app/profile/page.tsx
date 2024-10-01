@@ -5,14 +5,26 @@ const ProfilePage = () => {
   const { data: session } = useSession();
 
   if (!session) {
-    return <p>You are not logged in.</p>;
+    return (
+      <div className="min-h-screen bg-gray-100 flex justify-center items-center">
+        <p className="text-lg font-semibold text-gray-700">You are not logged in.</p>
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto py-10 px-4">
-      <h1 className="text-4xl font-bold mb-6">My Profile</h1>
-      <p className="text-lg mb-4">Name: {session.user?.name}</p>
-      <p className="text-lg">Email: {session.user?.email}</p>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center py-10">
+      <div className="bg-white shadow-lg rounded-lg p-8 w-full max-w-lg">
+        <h1 className="text-4xl font-bold text-blue-600 mb-6 text-center">My Profile</h1>
+        <div className="mb-6">
+          <p className="text-lg font-semibold text-gray-800">Name:</p>
+          <p className="text-lg text-gray-600">{session.user?.name}</p>
+        </div>
+        <div>
+          <p className="text-lg font-semibold text-gray-800">Email:</p>
+          <p className="text-lg text-gray-600">{session.user?.email}</p>
+        </div>
+      </div>
     </div>
   );
 };

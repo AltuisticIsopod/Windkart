@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
+import { useProductStore } from '../store/ProductStore'; // Import Zustand store
+import ProductCard from '../components/ProductCard'; // Import ProductCard component
 
 export default function ProductListPage() {
-  const [products, setProducts] = useState([]);
+  const { products, setProducts } = useProductStore(); // Access products and setProducts from Zustand
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
 
-  // Fetch product data from FakeStoreAPI when component mounts
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -17,16 +18,24 @@ export default function ProductListPage() {
           throw new Error('Failed to fetch products');
         }
         const data = await response.json();
-        setProducts(data);
+        setProducts(data); // Set products in Zustand store
         setLoading(false);
       } catch (error) {
-        setError(error.message);
+        if (error instanceof Error) {
+          setError(error.message);
+        } else {
+          setError('An unknown error occurred');
+        }
         setLoading(false);
       }
     };
 
-    fetchProducts();
-  }, []);
+    if (products.length === 0) { // Only fetch if products are not already set
+      fetchProducts();
+    } else {
+      setLoading(false);
+    }
+  }, [products, setProducts]);
 
   if (loading) {
     return (
@@ -52,25 +61,13 @@ export default function ProductListPage() {
         </h1>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {products.map((product) => (
-            <Link key={product.id} href={`/products/${product.id}`}>
-              <div className="bg-white p-6 rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer transform hover:scale-105 flex flex-col h-full">
-                {/* Display the product image */}
-                <img
-                  src={product.image}
-                  alt={product.title}
-                  className="w-full h-48 object-cover mb-4 rounded-lg"
-                />
-                <h2 className="text-xl font-semibold text-gray-800 mb-2">
-                  {product.title}
-                </h2>
-                <p className="text-lg text-gray-600 mb-4">${product.price}</p>
-                <div className="mt-auto">
-                  <button className="w-full bg-blue-600 text-white px-4 py-2 rounded-full hover:bg-blue-700 transition duration-300">
-                    View Details
-                  </button>
-                </div>
-              </div>
-            </Link>
+            <ProductCard
+              key={product.id}
+              id={product.id}
+              title={product.title}
+              price={product.price}
+              image={product.image}
+            />
           ))}
         </div>
       </div>
