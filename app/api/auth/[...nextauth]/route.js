@@ -1,8 +1,8 @@
 import NextAuth from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { MongoDBAdapter } from "@auth/mongodb-adapter";
-import clientPromise from "../../../lib/db"; // Adjust path to your MongoDB connection file
-
+import clientPromise from "../../../lib/db";
+import { getServerSession } from "next-auth"
 // Configuration for NextAuth
 const authOptions = {
   providers: [
@@ -26,5 +26,6 @@ const authOptions = {
 
 // Export NextAuth as both POST and GET handler
 const handler = NextAuth(authOptions);
+export const getAuthSession = () => getServerSession(authOptions)
 
 export { handler as GET, handler as POST };
