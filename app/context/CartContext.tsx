@@ -53,16 +53,19 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     await saveCart(updatedCart);
 
   };
-  
+
   // Remove item from cart
-  const removeFromCart = (id: number) => {
-    setCart((prevCart) => prevCart.filter((item) => item.id !== id));
+  const removeFromCart = async (id: number) => {
+    let updatedCart = cart.filter((item) => item.id !== id)
+    setCart(updatedCart)
+    await saveCart(updatedCart);
   };
 
   // Clear the entire cart
-  const clearCart = () => {
-    setCart([]);
-    saveUserCart();
+  const clearCart = async () => {
+    let updatedCart = [];;
+    setCart(updatedCart)
+    await saveCart(updatedCart);
   };
 
   return (
