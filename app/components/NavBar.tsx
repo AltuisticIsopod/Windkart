@@ -4,21 +4,29 @@ import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { FaUser } from 'react-icons/fa';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { fetchCart } from '../actions/userActions';
 
 const Navbar = () => {
-  const { cart } = useCart();
+  const { cart, setCart } = useCart();
   const { data: session, status } = useSession();
-  const [dropdownOpen, setDropdownOpen] = useState(false); // State to manage dropdown visibility
+  const [dropdownOpen, setDropdownOpen] = useState(false); 
+  const totalQuantity =  cart?.reduce((total, item) => total + item.quantity, 0);
 
-  const totalQuantity = cart.reduce((total, item) => total + item.quantity, 0);
-
-  // Toggle dropdown when the user icon is clicked
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
+  const onLoad= async () =>{
+    const res = await fetchCart();
+    setCart(res||[]);
+    return res;
+  }
 
-  // Close the dropdown if clicked outside of the dropdown
+  useEffect(()=>{
+    onLoad();
+  },[])
+
+
   const handleClickOutside = () => {
     setDropdownOpen(false);
   };
@@ -50,16 +58,16 @@ const Navbar = () => {
             ) : session ? (
               <div>
                 <button
-                  onClick={toggleDropdown} // Toggle dropdown on click
+                  onClick={toggleDropdown} 
                   className="hover:text-gray-200 flex items-center"
                 >
                   <FaUser className="text-xl" />
                   <span className="ml-2">{session.user?.name}</span>
                 </button>
-                {dropdownOpen && ( // Show dropdown only if `dropdownOpen` is true
+                {dropdownOpen && ( 
                   <div
                     className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg"
-                    onBlur={handleClickOutside} // Close dropdown on blur (optional)
+                    onBlur={handleClickOutside}
                   >
                     <Link href="/profile" className="block px-4 py-2 hover:bg-gray-200">
                       My Profile
@@ -67,7 +75,7 @@ const Navbar = () => {
                     <button
                       onClick={() => {
                         signOut();
-                        setDropdownOpen(false); // Close dropdown after sign out
+                        setDropdownOpen(false);
                       }}
                       className="block w-full text-left px-4 py-2 hover:bg-gray-200"
                     >

@@ -10,24 +10,19 @@ interface ProductCardProps {
   image: string;
 }
 
-export default function ProductCard({
-  id,
-  title,
-  price,
-  image,
-}: ProductCardProps) {
-  const { addToCart } = useCart(); // Access addToCart from the cart context
+export default function ProductCard({id,title,price,image}: ProductCardProps) {
+  const { addToCart } = useCart();
 
   const handleAddToCart = () => {
     const productToAdd = {
       id,
       name: title,
       price,
-      quantity: 1, // Default quantity to 1
-      image, // Add the image if needed in the cart
+      quantity: 1, 
+      image,
     };
 
-    addToCart(productToAdd); // Add the product to the cart
+    addToCart(productToAdd);
   };
 
   return (
