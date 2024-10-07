@@ -4,28 +4,17 @@ import Link from 'next/link';
 import { useCart } from '../context/CartContext';
 import { useSession, signIn, signOut } from 'next-auth/react';
 import { FaUser } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
-import { fetchCart } from '../actions/userActions';
+import { useState } from 'react';
 
 const Navbar = () => {
-  const { cart, setCart } = useCart();
+  const { cart } = useCart();
   const { data: session, status } = useSession();
   const [dropdownOpen, setDropdownOpen] = useState(false); 
-  const totalQuantity =  cart?.reduce((total, item) => total + item.quantity, 0);
+  const totalQuantity = cart?.reduce((total, item) => total + item.quantity, 0);
 
   const toggleDropdown = () => {
     setDropdownOpen((prev) => !prev);
   };
-  const onLoad= async () =>{
-    const res = await fetchCart();
-    setCart(res||[]);
-    return res;
-  }
-
-  useEffect(()=>{
-    onLoad();
-  },[])
-
 
   const handleClickOutside = () => {
     setDropdownOpen(false);
@@ -61,7 +50,18 @@ const Navbar = () => {
                   onClick={toggleDropdown} 
                   className="hover:text-gray-200 flex items-center"
                 >
-                  <FaUser className="text-xl" />
+                  {session.user?.image ? (
+                    <picture>
+                      <img
+                      src={session.user.image}
+                      alt="User Avatar"
+                      className="w-8 h-8 rounded-full object-cover"
+                    />
+                    </picture>
+                    
+                  ) : (
+                    <FaUser className="text-xl" />
+                  )}
                   <span className="ml-2">{session.user?.name}</span>
                 </button>
                 {dropdownOpen && ( 

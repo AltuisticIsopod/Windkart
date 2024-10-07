@@ -2,12 +2,11 @@
 import {
   createContext,
   useContext,
-  useEffect,
   useState,
-  useRef,
   ReactNode,
+  useEffect
 } from "react";
-import { saveCart, fetchCart } from "../actions/userActions";
+import { saveCart,fetchCart } from "../actions/userActions";
 
 type CartItem = {
   id: number;
@@ -19,24 +18,25 @@ type CartItem = {
 
 type CartContextType = {
   cart: CartItem[];
-  setCart: any;
-  addToCart: (item: CartItem) => void;
-  removeFromCart: (id: number) => void;
-  clearCart: () => void;
+  setCart: (cart: CartItem[]) => void;
+  addToCart: (item: CartItem) => Promise<void>;
+  removeFromCart: (id: number) => Promise<void>;
+  clearCart: () => Promise<void>;
+  onLoad:()=>Promise<CartItem[]>;
 };
 
 const CartContext = createContext<CartContextType | undefined>(undefined);
 
 export const CartProvider = ({ children }: { children: ReactNode }) => {
   const [cart, setCart] = useState<CartItem[]>([]);
-
-  const saveUserCart = async () => {
-    try {
-      await saveCart(cart);
-    } catch (error) {
-      console.error("Failed to save cart:", error);
-    }
-  };
+  const onLoad= async () =>{
+    const res = await fetchCart();
+    setCart(res||[]);
+    return res;
+  }
+  useEffect(()=>{
+    onLoad();
+  },[])
 
   // Add item to cart
   const addToCart = async (item: CartItem) => {
@@ -50,27 +50,38 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
       updatedCart = [...cart, { ...item, quantity: 1 }];
     }
     setCart(updatedCart);
-    await saveCart(updatedCart);
-
+    try {
+      await saveCart(updatedCart);
+    } catch (error) {
+      console.error("Failed to save cart:", error);
+    }
   };
 
   // Remove item from cart
   const removeFromCart = async (id: number) => {
-    let updatedCart = cart.filter((item) => item.id !== id)
-    setCart(updatedCart)
-    await saveCart(updatedCart);
+    const updatedCart = cart.filter((item) => item.id !== id);
+    setCart(updatedCart);
+    try {
+      await saveCart(updatedCart);
+    } catch (error) {
+      console.error("Failed to save cart:", error);
+    }
   };
 
   // Clear the entire cart
   const clearCart = async () => {
-    let updatedCart = [];;
-    setCart(updatedCart)
-    await saveCart(updatedCart);
+    const updatedCart: CartItem[] = [];
+    setCart(updatedCart);
+    try {
+      await saveCart(updatedCart);
+    } catch (error) {
+      console.error("Failed to save cart:", error);
+    }
   };
 
   return (
     <CartContext.Provider
-      value={{ cart, setCart, addToCart, removeFromCart, clearCart }}
+      value={{ cart, setCart, addToCart, removeFromCart, clearCart, onLoad }}
     >
       {children}
     </CartContext.Provider>
@@ -78,5 +89,9 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
 };
 
 export function useCart() {
-  return useContext(CartContext);
+  const context = useContext(CartContext);
+  if (!context) {
+    throw new Error("useCart must be used within a CartProvider");
+  }
+  return context;
 }
