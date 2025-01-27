@@ -1,7 +1,8 @@
 'use server';
-
+import { v4 as uuidv4 } from 'uuid';
 import { connectMongo } from '../lib/db';
 import UserCart from '../mongodb/models/cart';
+import UserOrder from '../mongodb/models/order';
 import { getAuthSession } from '../api/auth/[...nextauth]/route';
 
 type CartItem = {
@@ -48,5 +49,52 @@ export const fetchCart = async () => {
   } catch (error) {
     console.error('Error fetching cart:', error);
     throw new Error('Error fetching cart');
+  }
+};
+
+export const fetchOrders = async () => {
+  const session = await getAuthSession();
+  if(!session){
+    return;
+  }
+  await connectMongo();
+  try {
+    const userOrder = await UserOrder.findOne({ email: session.user?.email });
+    console.log(userOrder,"sfdfd");
+    return userOrder ? JSON.parse(JSON.stringify(userOrder?.orders)) : [];
+  } catch (error) {
+    console.error('Error fetching order:', error);
+    throw new Error('Error fetching order');
+  }
+};
+
+export const checkoutOrder = async (items: CartItem[],orderTotal:number) => {
+  const session = await getAuthSession();
+  if (!session) {
+    return { message: 'User not authenticated' };
+  }
+  await connectMongo();
+  try {
+    const existingUserOrders = await UserOrder.findOne({ email: session.user?.email });
+    const newOrder = {
+      id: uuidv4(),
+      items:items,
+      orderTotal:orderTotal
+    };
+    if (existingUserOrders) {
+      existingUserOrders.orders.push(newOrder);
+      await existingUserOrders.save();
+    } else {
+      // Create a new record if no previous orders exist
+      const newUserOrder = new UserOrder({
+        email: session.user?.email,
+        orders: [newOrder],
+      });
+      await newUserOrder.save();
+    }
+    return { message: 'Order Placed successfully' };
+  } catch (error) {
+    console.error('Error saving order:', error);
+    throw new Error('Error saving order');
   }
 };

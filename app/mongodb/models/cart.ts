@@ -12,8 +12,7 @@ export interface UserCart extends Document {
   email: string;
   cart: CartItem[];
 }
-
-const CartItemSchema = new Schema<CartItem>({
+export const CartItemSchema = new Schema<CartItem>({
   id: { type: Number, required: true },
   name: { type: String, required: true },
   price: { type: Number, required: true },

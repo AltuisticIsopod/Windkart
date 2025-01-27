@@ -1,14 +1,14 @@
 "use client";
 
 import { useParams, useRouter } from "next/navigation";
-import { useProductStore } from "../../store/ProductStore"; // Import Zustand store
+import { useProductStore } from "../../store/ProductStore";
 import { useCart } from "../../context/CartContext";
 
 export default function ProductPage() {
   const router = useRouter();
-  const { id } = useParams(); // Get the dynamic product id from the URL
-  const { getProductById } = useProductStore(); // Access the store to get product by id
-  const product = getProductById(Number(id)); // Get the product using the id
+  const { id } = useParams(); 
+  const { getProductById } = useProductStore(); 
+  const product = getProductById(Number(id)); 
   const { addToCart } = useCart();
 
   if (!product) {

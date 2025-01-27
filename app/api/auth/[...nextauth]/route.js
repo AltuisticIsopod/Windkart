@@ -14,7 +14,7 @@ const authOptions = {
   adapter: MongoDBAdapter(clientPromise),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
-    strategy: "jwt", // Use JWT for sessions
+    strategy: "jwt",
   },
   callbacks: {
     async session({ session, token }) {

@@ -38,7 +38,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     onLoad();
   },[])
 
-  // Add item to cart
   const addToCart = async (item: CartItem) => {
     const existingItem = cart.find((i) => i.id === item.id);
     let updatedCart;
@@ -57,7 +56,6 @@ export const CartProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  // Remove item from cart
   const removeFromCart = async (id: number) => {
     const updatedCart = cart.filter((item) => item.id !== id);
     setCart(updatedCart);

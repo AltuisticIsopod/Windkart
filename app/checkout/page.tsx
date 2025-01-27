@@ -1,16 +1,16 @@
 "use client";
 import { useCart } from '../context/CartContext';
 import Link from 'next/link';
+import { checkoutOrder } from '../actions/userActions';
 
 export default function CheckoutPage() {
-  const { cart, clearCart } = useCart();
+  const { cart } = useCart();
 
-  // Calculate the total price
   const totalPrice = cart.reduce((total, item) => total + item.price * item.quantity, 0);
 
   const handleCheckout = () => {
-    alert('Order placed successfully!');
-    clearCart();
+    const items = cart;    
+    checkoutOrder(items,totalPrice)
   };
 
   return (
@@ -20,7 +20,6 @@ export default function CheckoutPage() {
       <div className="bg-white shadow-md rounded-lg p-8 w-full max-w-3xl">
         <h2 className="text-2xl font-semibold text-gray-800 mb-4">Order Summary</h2>
 
-        {/* Cart Items */}
         {cart.length === 0 ? (
           <p className="text-gray-600">Your cart is empty.</p>
         ) : (
@@ -38,13 +37,11 @@ export default function CheckoutPage() {
               </div>
             ))}
 
-            {/* Total Price */}
             <div className="flex justify-between items-center mt-6 border-t pt-4">
               <h2 className="text-xl font-semibold text-gray-800">Total:</h2>
               <p className="text-xl font-semibold text-gray-800">${totalPrice.toFixed(2)}</p>
             </div>
 
-            {/* Checkout Button */}
             <div className="flex justify-between mt-8">
               <Link href="/cart">
                 <button className="px-6 py-3 bg-gray-500 text-white font-semibold rounded-full hover:bg-gray-600 transition duration-300">

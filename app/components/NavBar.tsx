@@ -1,15 +1,15 @@
-'use client';
+"use client";
 
-import Link from 'next/link';
-import { useCart } from '../context/CartContext';
-import { useSession, signIn, signOut } from 'next-auth/react';
-import { FaUser } from 'react-icons/fa';
-import { useState } from 'react';
+import Link from "next/link";
+import { useCart } from "../context/CartContext";
+import { useSession, signIn, signOut } from "next-auth/react";
+import { FaUser } from "react-icons/fa";
+import { useState } from "react";
 
 const Navbar = () => {
   const { cart } = useCart();
   const { data: session, status } = useSession();
-  const [dropdownOpen, setDropdownOpen] = useState(false); 
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const totalQuantity = cart?.reduce((total, item) => total + item.quantity, 0);
 
   const toggleDropdown = () => {
@@ -42,35 +42,40 @@ const Navbar = () => {
             </span>
           </Link>
           <div className="relative">
-            {status === 'loading' ? (
+            {status === "loading" ? (
               <div>Loading...</div>
             ) : session ? (
               <div>
                 <button
-                  onClick={toggleDropdown} 
+                  onClick={toggleDropdown}
                   className="hover:text-gray-200 flex items-center"
                 >
                   {session.user?.image ? (
                     <picture>
                       <img
-                      src={session.user.image}
-                      alt="User Avatar"
-                      className="w-8 h-8 rounded-full object-cover"
-                    />
+                        src={session.user.image}
+                        alt="User Avatar"
+                        className="w-8 h-8 rounded-full object-cover"
+                      />
                     </picture>
-                    
                   ) : (
                     <FaUser className="text-xl" />
                   )}
                   <span className="ml-2">{session.user?.name}</span>
                 </button>
-                {dropdownOpen && ( 
+                {dropdownOpen && (
                   <div
                     className="absolute right-0 mt-2 w-48 bg-white text-black shadow-lg rounded-lg"
                     onBlur={handleClickOutside}
                   >
-                    <Link href="/profile" className="block px-4 py-2 hover:bg-gray-200">
+                    <Link
+                      href="/profile"
+                      className="block px-4 py-2 hover:bg-gray-200"
+                    >
                       My Profile
+                    </Link>
+                    <Link href="/orders" className="block px-4 py-2 hover:bg-gray-200">
+                      Your Orders
                     </Link>
                     <button
                       onClick={() => {

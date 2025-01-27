@@ -1,5 +1,5 @@
-import { MongoClient, MongoClientOptions } from 'mongodb';
-import mongoose, { Mongoose } from 'mongoose';
+import { MongoClient } from 'mongodb';
+import mongoose from 'mongoose';
 
 // MongoDB URI from environment variables
 const uri: string = process.env.MONGODB_URI || '';
@@ -28,8 +28,6 @@ export const connectMongo = async (): Promise<MongoClient> => {
     throw new Error('Failed to connect with Mongoose');
   }
 };
-// Persist MongoClient connection across HMR in development
-
 if (process.env.NODE_ENV === 'development') {
   if (!(global as any)._mongoClientPromise) {
     (global as any)._mongoClientPromise = connectMongo();

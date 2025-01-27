@@ -2,11 +2,11 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import { useProductStore } from '../store/ProductStore'; // Import Zustand store
-import ProductCard from '../components/ProductCard'; // Import ProductCard component
+import { useProductStore } from '../store/ProductStore'; 
+import ProductCard from '../components/ProductCard'; 
 
 export default function ProductListPage() {
-  const { products, setProducts } = useProductStore(); // Access products and setProducts from Zustand
+  const { products, setProducts } = useProductStore(); 
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -18,7 +18,7 @@ export default function ProductListPage() {
           throw new Error('Failed to fetch products');
         }
         const data = await response.json();
-        setProducts(data); // Set products in Zustand store
+        setProducts(data); 
         setLoading(false);
       } catch (error) {
         if (error instanceof Error) {
@@ -30,7 +30,7 @@ export default function ProductListPage() {
       }
     };
 
-    if (products.length === 0) { // Only fetch if products are not already set
+    if (products.length === 0) { 
       fetchProducts();
     } else {
       setLoading(false);
